@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "main.py", line 11, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
+srun: error: holygpu2c0701: task 0: Exited with exit code 1
