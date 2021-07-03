@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 import time
 import math
@@ -242,7 +244,8 @@ try:
             tmp = {}
             for prm in model.parameters():
                 tmp[prm] = prm.data.clone()
-                prm.data = optimizer.state[prm]['ax'].clone()
+                if 'ax' in optimizer.state[prm]:
+                    prm.data = optimizer.state[prm]['ax'].clone()
 
             val_loss2 = evaluate(val_data)
             print('-' * 89)
@@ -255,9 +258,14 @@ try:
                 model_save(args.save)
                 print('Saving Averaged!')
                 stored_loss = val_loss2
-
+            nparams = 0
+            nparams_in_temp_keys = 0
             for prm in model.parameters():
-                prm.data = tmp[prm].clone()
+                nparams += 1
+                if prm in tmp.keys():
+                    nparams_in_temp_keys += 1
+                    prm.data = tmp[prm].clone()
+                print('params {}, params in tmp keys: {}'.format(nparams,nparams_in_temp_keys))
 
         else:
             val_loss = evaluate(val_data, eval_batch_size)
